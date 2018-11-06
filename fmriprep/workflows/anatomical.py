@@ -1313,10 +1313,10 @@ def init_anat_derivatives_wf(output_dir, output_spaces, template, freesurfer,
 
     if freesurfer:
         ds_t1_fsaseg = pe.Node(
-            DerivativesDataSink(base_directory=output_dir, suffix='label-aseg_dseg'),
+            DerivativesDataSink(base_directory=output_dir, desc='aseg', suffix='dseg'),
             name='ds_t1_fsaseg', run_without_submitting=True)
         ds_t1_fsparc = pe.Node(
-            DerivativesDataSink(base_directory=output_dir, suffix='label-aparcaseg_dseg'),
+            DerivativesDataSink(base_directory=output_dir, desc='aparcaseg', suffix='dseg'),
             name='ds_t1_fsparc', run_without_submitting=True)
         workflow.connect([
             (inputnode, lta_2_itk, [('t1_2_fsnative_forward_transform', 'in_lta')]),

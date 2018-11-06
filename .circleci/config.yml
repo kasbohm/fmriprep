@@ -354,10 +354,10 @@ jobs:
           at: /tmp
       - restore_cache:
           keys:
-            - ds005-anat-v9-{{ .Branch }}-{{ epoch }}
-            - ds005-anat-v9-{{ .Branch }}
-            - ds005-anat-v9-master
-            - ds005-anat-v9-
+            - ds005-anat-v10-{{ .Branch }}-{{ epoch }}
+            - ds005-anat-v10-{{ .Branch }}
+            - ds005-anat-v10-master
+            - ds005-anat-v10-
       - run:
           name: Setting up test
           command: |
@@ -388,10 +388,10 @@ jobs:
                 -e FMRIPREP_DEV 1 -u $(id -u) \
                 --config $PWD/nipype.cfg -w /tmp/ds005/work \
                 /tmp/data/ds005 /tmp/ds005/derivatives participant \
-                --debug --write-graph --mem_mb 4096 \
+                --sloppy --write-graph --mem_mb 4096 \
                 --nthreads 2 --anat-only -vv
       - save_cache:
-         key: ds005-anat-v9-{{ .Branch }}-{{ epoch }}
+         key: ds005-anat-v10-{{ .Branch }}-{{ epoch }}
          paths:
             - /tmp/ds005/work
             - /tmp/ds005/derivatives/fmriprep
@@ -408,7 +408,7 @@ jobs:
                 -e FMRIPREP_DEV 1 -u $(id -u) \
                 --config $PWD/nipype.cfg -w /tmp/ds005/work \
                 /tmp/data/ds005 /tmp/ds005/derivatives participant \
-                --debug --write-graph --use-syn-sdc --mem_mb 4096 \
+                --sloppy --write-graph --use-syn-sdc --mem_mb 4096 \
                 --ignore-aroma-denoising-errors --use-aroma \
                 --output-space T1w template fsaverage5 \
                 --template-resampling-grid native \
@@ -435,7 +435,7 @@ jobs:
                 -e FMRIPREP_DEV 1 -u $(id -u) \
                 --config $PWD/nipype.cfg -w /tmp/ds005/work \
                 /tmp/data/ds005 /tmp/ds005/derivatives_partial participant \
-                --debug --write-graph --use-syn-sdc --mem_mb 4096 \
+                --sloppy --write-graph --use-syn-sdc --mem_mb 4096 \
                 --output-space T1w template fsaverage5 \
                 --ignore-aroma-denoising-errors --use-aroma \
                 --template-resampling-grid native \
@@ -517,7 +517,7 @@ jobs:
                 -e FMRIPREP_DEV 1 \
                 --config $PWD/nipype.cfg -w /tmp/ds054/work \
                 /tmp/data/ds054 /tmp/ds054/derivatives participant \
-                --fs-no-reconall --debug --write-graph \
+                --fs-no-reconall --sloppy --write-graph \
                 --mem_mb 4096 --nthreads 2 --anat-only -vv
       - save_cache:
          key: ds054-anat-v7-{{ .Branch }}-{{ epoch }}
@@ -537,7 +537,7 @@ jobs:
                 -e FMRIPREP_DEV 1 \
                 --config $PWD/nipype.cfg -w /tmp/ds054/work \
                 /tmp/data/ds054 /tmp/ds054/derivatives participant \
-                --fs-no-reconall --debug \
+                --fs-no-reconall --sloppy \
                 --output-space T1w template \
                 --template-resampling-grid 2mm \
                 --mem_mb 4096 --nthreads 2 -vv
@@ -562,7 +562,7 @@ jobs:
                 -e FMRIPREP_DEV 1 \
                 --config $PWD/nipype.cfg -w /tmp/ds054/work \
                 /tmp/data/ds054 /tmp/ds054/derivatives participant \
-                --fs-no-reconall --debug --write-graph \
+                --fs-no-reconall --sloppy --write-graph \
                 --output-space T1w template \
                 --template-resampling-grid 2mm \
                 --reports-only --run-uuid $UUID
@@ -601,8 +601,10 @@ jobs:
           at: /tmp
       - restore_cache:
           keys:
-            - ds210-anat-v4-{{ epoch }}
-            - ds210-anat-v4-
+            - ds210-anat-v5-{{ .Branch }}-{{ epoch }}
+            - ds210-anat-v5-{{ .Branch }}
+            - ds210-anat-v5-master
+            - ds210-anat-v5-
       - run:
           name: Setting up test
           command: |
@@ -633,10 +635,10 @@ jobs:
                 -e FMRIPREP_DEV 1 \
                 --config $PWD/nipype.cfg -w /tmp/ds210/work \
                 /tmp/data/ds210 /tmp/ds210/derivatives participant \
-                --fs-no-reconall --debug --write-graph \
+                --fs-no-reconall --sloppy --write-graph \
                 --mem_mb 4096 --nthreads 2 --anat-only -vv
       - save_cache:
-         key: ds210-anat-v4-{{ epoch }}
+         key: ds210-anat-v5-{{ .Branch }}-{{ epoch }}
          paths:
             - /tmp/ds210/work
             - /tmp/ds210/derivatives
@@ -651,7 +653,7 @@ jobs:
                 /tmp/data/ds210 /tmp/ds210/derivatives participant \
                 --fs-no-reconall --t2s-coreg --use-syn-sdc \
                 --template-resampling-grid native \
-                --debug --write-graph --mem_mb 4096 --nthreads 2 -vv
+                --sloppy --write-graph --mem_mb 4096 --nthreads 2 -vv
       - run:
           name: Checking outputs of fMRIPrep
           command: |
@@ -742,14 +744,24 @@ workflows:
       - get_regression_data:
           filters:
             branches:
-              ignore: /docs?\/.*/
+              ignore:
+                - /docs?\/.*/
+                - /ds005\/.*/
+                - /ds054\/.*/
+                - /ds210\/.*/
+            tags:
+              only: /.*/
 
       - build_docs:
           requires:
             - build
           filters:
             branches:
-              ignore: /tests?\/.*/
+              ignore:
+                - /tests?\/.*/
+                - /ds005\/.*/
+                - /ds054\/.*/
+                - /ds210\/.*/
             tags:
               only: /.*/
 
@@ -770,7 +782,11 @@ workflows:
             - get_regression_data
           filters:
             branches:
-              ignore: /docs?\/.*/
+              ignore:
+                - /docs?\/.*/
+                - /ds005\/.*/
+                - /ds054\/.*/
+                - /ds210\/.*/
             tags:
               only: /.*/
 
@@ -783,6 +799,8 @@ workflows:
               ignore:
                 - /docs?\/.*/
                 - /tests?\/.*/
+                - /ds054\/.*/
+                - /ds210\/.*/
             tags:
               only: /.*/
 
@@ -795,6 +813,8 @@ workflows:
               ignore:
                 - /docs?\/.*/
                 - /tests?\/.*/
+                - /ds005\/.*/
+                - /ds210\/.*/
             tags:
               only: /.*/
 
@@ -808,6 +828,8 @@ workflows:
               ignore:
                 - /docs?\/.*/
                 - /tests?\/.*/
+                - /ds005\/.*/
+                - /ds054\/.*/
             tags:
               only: /.*/
 

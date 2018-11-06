@@ -394,9 +394,8 @@ Non-gridded (surface) resamplings were performed using `mri_vol2surf`
         ]),
     ])
 
-    # The first reference uses T2 contrast enhancement
-    bold_reference_wf = init_bold_reference_wf(
-        omp_nthreads=omp_nthreads, enhance_t2=True)
+    # Generate a tentative boldref
+    bold_reference_wf = init_bold_reference_wf(omp_nthreads=omp_nthreads)
 
     # Top-level BOLD splitter
     bold_split = pe.Node(FSLSplit(dimension='t'), name='bold_split',
@@ -532,6 +531,8 @@ Non-gridded (surface) resamplings were performed using `mri_vol2surf`
             ('outputnode.movpar_file', 'inputnode.movpar_file')]),
         (bold_reg_wf, bold_confounds_wf, [
             ('outputnode.itk_t1_to_bold', 'inputnode.t1_bold_xform')]),
+        (bold_reference_wf, bold_confounds_wf, [
+            ('outputnode.skip_vols', 'inputnode.skip_vols')]),
         (bold_confounds_wf, outputnode, [
             ('outputnode.confounds_file', 'confounds'),
         ]),
@@ -730,6 +731,8 @@ Non-gridded (surface) resamplings were performed using `mri_vol2surf`
                     ('outputnode.bold_mask', 'inputnode.bold_mask')]),
                 (bold_sdc_wf, ica_aroma_wf, [
                     ('outputnode.out_warp', 'inputnode.fieldwarp')]),
+                (bold_reference_wf, ica_aroma_wf, [
+                    ('outputnode.skip_vols', 'inputnode.skip_vols')]),
                 (bold_confounds_wf, join, [
                     ('outputnode.confounds_file', 'in_file')]),
                 (ica_aroma_wf, join,
@@ -886,11 +889,11 @@ def init_func_derivatives_wf(output_dir, output_spaces, template, freesurfer,
 
     if freesurfer:
         ds_bold_aseg_t1 = pe.Node(DerivativesDataSink(
-            base_directory=output_dir, space='T1w', suffix='label-aseg_dseg'),
+            base_directory=output_dir, space='T1w', desc='aseg', suffix='dseg'),
             name='ds_bold_aseg_t1', run_without_submitting=True,
             mem_gb=DEFAULT_MEMORY_MIN_GB)
         ds_bold_aparc_t1 = pe.Node(DerivativesDataSink(
-            base_directory=output_dir,  space='T1w', suffix='label-aparcaseg_dseg'),
+            base_directory=output_dir,  space='T1w', desc='aparcaseg', suffix='dseg'),
             name='ds_bold_aparc_t1', run_without_submitting=True,
             mem_gb=DEFAULT_MEMORY_MIN_GB)
         workflow.connect([
@@ -924,7 +927,7 @@ def init_func_derivatives_wf(output_dir, output_spaces, template, freesurfer,
                 CiftiNameSource(), iterfield=['variant'], name='name_cifti',
                 mem_gb=DEFAULT_MEMORY_MIN_GB, run_without_submitting=True)
             cifti_bolds = pe.MapNode(
-                DerivativesDataSink(base_directory=output_dir, desc='preproc', compress=False),
+                DerivativesDataSink(base_directory=output_dir, compress=False),
                 iterfield=['in_file', 'suffix'], name='cifti_bolds',
                 run_without_submitting=True, mem_gb=DEFAULT_MEMORY_MIN_GB)
             cifti_key = pe.MapNode(DerivativesDataSink(

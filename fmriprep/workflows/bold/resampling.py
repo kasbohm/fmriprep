@@ -301,7 +301,8 @@ generating a *preprocessed BOLD run in {tpl} space*.
                     mem_gb=mem_gb * 3)
 
     # Generate a reference on the target T1w space
-    gen_final_ref = init_bold_reference_wf(omp_nthreads)
+    gen_final_ref = init_bold_reference_wf(
+        omp_nthreads=omp_nthreads, pre_mask=True)
 
     workflow.connect([
         (inputnode, merge_xforms, [('t1_2_mni_forward_transform', 'in1'),
@@ -311,6 +312,7 @@ generating a *preprocessed BOLD run in {tpl} space*.
         (inputnode, bold_to_mni_transform, [('bold_split', 'input_image')]),
         (bold_to_mni_transform, merge, [('out_files', 'in_files')]),
         (merge, gen_final_ref, [('out_file', 'inputnode.bold_file')]),
+        (mask_mni_tfm, gen_final_ref, [('output_image', 'inputnode.bold_mask')]),
         (merge, outputnode, [('out_file', 'bold_mni')]),
         (gen_final_ref, outputnode, [('outputnode.ref_image', 'bold_mni_ref')]),
     ])

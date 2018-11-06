@@ -5,7 +5,7 @@ from .bids import (
     ReadSidecarJSON, DerivativesDataSink, BIDSDataGrabber, BIDSFreeSurferDir, BIDSInfo
 )
 from .images import (
-    IntraModalMerge, ValidateImage, TemplateDimensions, Conform
+    IntraModalMerge, ValidateImage, TemplateDimensions, Conform, MatchHeader
 )
 from .freesurfer import (
     StructuralReference, MakeMidthickness, FSInjectBrainExtracted,
