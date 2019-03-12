@@ -1,3 +1,163 @@
+1.3.1.post1 (March 11, 2019)
+============================
+
+A hotfix release addressing issues related to TemplateFlow for Singularity users.
+
+* FIX: Make sure ``--cifti-output`` requires at least one of ``fsaverage{5,6}`` (#1514) @oesteban
+* [FIX] Avoid using ``$HOME`` for storing templates (#1529) @chrisfilo
+
+1.3.1 (March 6, 2019)
+=====================
+
+Updated ecosystem's versions (TemplateFlow 0.1.x, Niworkflows 0.8.x, and sMRIPrep 0.1.x)
+to include latest improvements (bugfixes from niworkflows and the new pybids interface
+of templateflow).
+TemplateFlow 0.1.0 does not require datalad anymore.
+With thanks to @franklin-feingold for contributions.
+
+* UX: Reduce warning levels (#1513) @effigies
+* DOC: ``fmriprep-docker`` documentation (#1515) @franklin-feingold
+* REL: 1.3.1 (#1527) @oesteban
+
+1.3.0.post3 (March 1, 2019)
+===========================
+
+Hotfix release intended for Docker users, smoothing the experience of TemplateFlow
+when using the ``-u UID`` flag is necessary.
+
+* [FIX] Orientation problem with niworkflows<0.7.2 (poldracklab/niworkflows#312) @effigies
+* [ENH] TemplateFlow + ``docker run -u ...`` (#1525) @oesteban
+* [ENH] Include repetition time in functional summary (#1508) @wiheto
+* [FIX] Do not crash if all aroma components are classified as noise (#1467) @jdkent
+
+1.3.0.post2 (February 14, 2019)
+===============================
+
+Hotfix release intended for Singularity users, amending the previous iteration
+that didn't fix the problem (#1510) @effigies.
+
+1.3.0.post1 (February 8, 2019)
+==============================
+
+Hotfix release intended for Singularity users. For further detail, please see
+`#1500 <https://github.com/poldracklab/fmriprep/issues/1500>`__.
+
+1.3.0 (February 7, 2019)
+========================
+
+We start the 1.3.x series including a few bugfixes, housekeeping duty and a refactors
+to leverage `sMRIPrep <https://github.com/poldracklab/smriprep>`__ (which is a fork of
+fMRIPrep's anatomical workflow), pybids>=0.7 for querying dataset, and
+`TemplateFlow <https://github.com/templateflow>`__ for handling standard spaces.
+
+* [FIX] Bad ``fsnative`` replacement in CIfTI workflow (#1476) @oesteban
+* [FIX] Avoid warning when generating boilerplate (#1464) @oesteban
+* [MAINT] resolves #1485 : patch fmriprep-docker automount for use with Python 3.7 (#1486) @rciric
+* [RF] Use anatomical workflows from sMRIPrep (#1482) @oesteban
+* [MAINT] Update sentry-sdk (#1490) @chrisfilo
+* [ENH] Remaining TemplateFlow integrations (#1494) @oesteban
+* [MAINT] Update to keep up with poldracklab/niworkflows#299 (#1496) @oesteban
+* [FIX] Updating bids-validator to 1.1.3 (#1498) @chrisfilo
+
+
+1.2.6-1 (January 24, 2019)
+==========================
+
+Hotfix release of version 1.2.6, pinning niworkflows to a release version (instead
+of the development branch, since #1459) and including to bugfixes.
+
+* [PIN] NiWorkflows 0.5.2.post7 (`1bf4a21 <https://github.com/poldracklab/fmriprep/commit/1bf4a21cce62c4330510a9a8ae50db876fbc23b0>`__).
+* [FIX] Bad ``fsnative`` replacement in CIfTI workflow (#1476) @oesteban
+* [FIX] Avoid warning when generating boilerplate (#1464) @oesteban
+
+
+1.2.6 (January 17, 2019)
+========================
+
+This is a bug fix release in the 1.2 series. Probably the most noticeable
+improvement is the restoration of auto-generated content in the documentation.
+
+Additionally, FreeSurfer ``aparc``/``aseg`` segmentations are now sampled to all
+output spaces.
+
+For any users importing fMRIPrep interfaces, many of these have been moved to
+the niworkflows package.
+
+With thanks to Nir Jacoby and Hrvoje Stojic for contributions.
+
+* [FIX] Use keyword arguments for Sentry breadcrumb reporting (#1441) @chrisfilo
+* [FIX] Verify proc file exists before reading (#1454) @effigies
+* [ENH] Only report participants with errors (#1437) @effigies
+* [ENH] Resample aparc/aseg into specified output spaces (#1401) @nirjacoby
+* [ENH] Copy BibTeX file to log directory for LaTeX users (#1446) @hstojic
+* [RF] Use niworkflows upstreamed interfaces and utilities (#1438) @oesteban
+* [DOC] Fix documentation build (#1451) @oesteban
+* [DOC] Fix ReadTheDocs builds (#1459) @effigies
+* [MAINT/DOC] Clean-up ``__about__``, update with Nat Meth (#1445) @oesteban
+* [MAINT] Make sure Python 3.7.1 is installed (#1452) @oesteban
+* [MAINT] Dev status to beta, bump copyright year (#1468) @effigies
+
+
+1.2.5 (December 4, 2018)
+========================
+
+Hotfix release.
+
+* [FIX] Breadcrumb reporting (#1435) @chrisfilo
+
+
+1.2.4 (December 3, 2018)
+========================
+
+Bugfixes, an additional iteration over Sentry reporting and some relevant ME-EPI updates
+(with thanks to @emdupre).
+
+* [ENH] Update ME-EPI workflow to create optimal combination (#1263) @emdupre
+* [MAINT] Merge master into multiecho (#1324) @effigies
+* [ENH] Add echo-idx flag (#1355) @emdupre
+* [FIX] Always run FreeSurfer interfaces that sink outside working directory (#1397) @effigies
+* [ENH] Use Python 3.7 in Dockerfile (#1398) @effigies
+* [DOC] Update contributing guide and add code of conduct (#1404) @emdupre
+* [FIX] Calculate template transforms explicitly as RAS2RAS (#1399) @effigies
+* [MAINT] Replace ``img.get_affine()`` -> ``img.affine`` (#1414) @oesteban
+* [FIX] Truncating of sentry messages (#1417) @chrisfilo
+* [ENH] Add fmriprep-docker execution environment (#1416) @chrisfilo
+* [MAINT] Update indexed_gzip to handle small .nii.gz (#1421) @effigies
+* [ENH] Group common issues with fingerprints (#1418) @chrisfilo
+* [ENH] adding memory and cpu info to sentry logs (#1420) @chrisfilo
+* [ENH] Use standard T2* map as coregistration target (#1383) @emdupre
+* [ENH] Handle FreeSurfer subject directory preparation gracefully when run in parallel (#1413) @effigies
+* [ENH] Make sure inputs are BIDS compliant before running fmriprep (#1419) @chrisfilo
+* [ENH] Sentry event categorization propagation (#1422) @chrisfilo
+* [MAINT] Require nipype >= 1.1.6 (#1426) @effigies
+* [ENH] Omnibus multi-echo pull request (#1296) @effigies
+* [ENH] Report memory overcommit policies (#1429) @effigies
+
+
+1.2.3 (November 16, 2018)
+=========================
+
+Refactor of Sentry reporting, bug fixes and added tests. With thanks to @sebnaze for contributions.
+
+* [TEST] Utility functions for skipping/re-inserting non-steady-state volumes (#1382) @jdkent
+* [FIX] Correctly populate right-hemisphere time series in CIFTI derivatives (#1378) @sebnaze
+* [FIX] Restore original contour colors in reports (#1385) @oesteban
+* [ENH] New sentry SDK (#1381) @chrisfilo
+* [ENH] Sentry refinement (#1394) @chrisfilo
+
+
+1.2.2 (November 9, 2018)
+========================
+
+Several bug fixes. With thanks to Franz Liem, Nir Jacoby and Markus Handal Sneve for contributions.
+
+* [FIX] Do not show --debug deprecation warning unless used (#1361) @effigies
+* [FIX] Select consistent parcellation for producing aparcaseg derivatives (#1369) @nirjacoby
+* [FIX] Count non-steady-state volumes even if sbref is passed (#1373) @effigies
+* [ENH] Respect SliceEncodingDirection metadata (#1350) @fliem
+* [ENH] Set maximum MELODIC components to 200 by default (#1366) @markushs
+* [TEST] Verify LegacyMultiProc functionality (#1368) @effigies
+
 1.2.1 (November 1, 2018)
 ========================
 
@@ -31,7 +191,7 @@ With many thanks to Ali Cohen, James Kent, Inge Amlien, Sebastian Urchs, and Zhi
 * [TST] Add heavily-nonuniform boldrefs for regression tests (#1329) @oesteban
 * [TST] Fix expectations for CIFTI outputs & ds005 (#1344) @oesteban
 * [MAINT] Ignore project settings files from popular python/code editors (#1336) @jdkent
-* [CI] Deploy poldracklab/fmriprep:unstable tracking master (#1307) @effigies 
+* [CI] Deploy poldracklab/fmriprep:unstable tracking master (#1307) @effigies
 
 1.1.8 (October 4, 2018)
 =======================

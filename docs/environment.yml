@@ -11,7 +11,6 @@ dependencies:
 - jinja2=2.8
 - sphinx>=1.5.1
 - sphinx_rtd_theme
-- mock
 - future
 - nibabel
 - statsmodels
@@ -21,7 +20,7 @@ dependencies:
 - python-dateutil
 - pydot>=1.2.3
 - cython
-- nipype>=1.1.1
+- nipype>=1.1.6
 
 - pip:
     - sphinx-argparse
@@ -29,4 +28,6 @@ dependencies:
     - svgutils
     - nitime
     - nilearn
-    - niworkflows==0.4.4
+    - niworkflows>=0.7.2,<0.8.0a0
+    - smriprep>=0.0.4,<0.1.0a0
+    - tedana>=0.0.5
